@@ -15,9 +15,9 @@ interface StatCardProps {
 const variantStyles = {
   default: 'bg-card',
   primary: 'bg-card border-l-4 border-l-primary',
-  success: 'bg-card border-l-4 border-l-status-approved',
-  warning: 'bg-card border-l-4 border-l-status-pending',
-  danger: 'bg-card border-l-4 border-l-status-rejected',
+  success: 'bg-card border-l-4 border-l-emerald-500',
+  warning: 'bg-card border-l-4 border-l-amber-500',
+  danger: 'bg-card border-l-4 border-l-red-500',
 };
 
 const StatCard = ({ title, value, icon: Icon, trend, variant = 'default' }: StatCardProps) => {
@@ -36,7 +36,7 @@ const StatCard = ({ title, value, icon: Icon, trend, variant = 'default' }: Stat
             <p
               className={cn(
                 'text-xs mt-2 font-medium',
-                trend.isPositive ? 'text-status-approved' : 'text-status-rejected'
+                trend.isPositive ? 'text-emerald-600' : 'text-red-600'
               )}
             >
               {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}% from last month

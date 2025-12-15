@@ -6,7 +6,7 @@ export type ObservationType = 'unsafe_act' | 'unsafe_condition';
 
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
 
-export type Category = 
+export type Category =
   | 'PPE'
   | 'Tools'
   | 'Housekeeping'

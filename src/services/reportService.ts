@@ -124,6 +124,36 @@ const mockReports: Report[] = [
     updatedAt: '2024-12-01T14:00:00Z',
     feedback: 'Fire extinguisher replaced with newly certified unit.',
   },
+  {
+    id: '6',
+    reportId: 'OBS-12-24-105',
+    title: 'Missing safety guard on machine',
+    description: 'Safety guard missing from grinding machine in workshop area.',
+    type: 'unsafe_condition',
+    category: 'Tools',
+    location: 'Workshop Area',
+    riskLevel: 'critical',
+    status: 'pending',
+    submittedBy: '5',
+    submittedByName: 'Emma Davis',
+    submittedAt: '2024-12-15T07:00:00Z',
+    updatedAt: '2024-12-15T07:00:00Z',
+  },
+  {
+    id: '7',
+    reportId: 'OBS-12-24-106',
+    title: 'Worker lifting heavy load incorrectly',
+    description: 'Employee observed lifting 50kg box without using proper lifting technique or equipment.',
+    type: 'unsafe_act',
+    category: 'Manual Handling',
+    location: 'Loading Dock',
+    riskLevel: 'medium',
+    status: 'pending',
+    submittedBy: '1',
+    submittedByName: 'John Smith',
+    submittedAt: '2024-12-15T08:30:00Z',
+    updatedAt: '2024-12-15T08:30:00Z',
+  },
 ];
 
 // Mock notifications
@@ -163,13 +193,13 @@ let notifications = [...mockNotifications];
 
 // Report functions
 export const getReports = (): Report[] => {
-  return [...reports].sort((a, b) => 
+  return [...reports].sort((a, b) =>
     new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
   );
 };
 
 export const getReportsByUser = (userId: string): Report[] => {
-  return reports.filter(r => r.submittedBy === userId).sort((a, b) => 
+  return reports.filter(r => r.submittedBy === userId).sort((a, b) =>
     new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
   );
 };
@@ -194,7 +224,7 @@ export const getReportStats = () => {
   const closed = reports.filter(r => r.status === 'closed').length;
   const unsafeActs = reports.filter(r => r.type === 'unsafe_act').length;
   const unsafeConditions = reports.filter(r => r.type === 'unsafe_condition').length;
-  
+
   // Category breakdown
   const categoryStats = reports.reduce((acc, r) => {
     acc[r.category] = (acc[r.category] || 0) + 1;
@@ -207,13 +237,13 @@ export const getReportStats = () => {
     return acc;
   }, {} as Record<string, number>);
 
-  return { 
-    total, 
-    pending, 
-    inReview, 
-    actionAssigned, 
-    closed, 
-    unsafeActs, 
+  return {
+    total,
+    pending,
+    inReview,
+    actionAssigned,
+    closed,
+    unsafeActs,
     unsafeConditions,
     categoryStats,
     riskStats,
@@ -229,9 +259,9 @@ export const submitReport = (report: Omit<Report, 'id' | 'reportId' | 'status' |
     submittedAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
-  
+
   reports = [newReport, ...reports];
-  
+
   // Add notification for supervisors/admin
   addNotification({
     type: 'report_submitted',
@@ -239,7 +269,7 @@ export const submitReport = (report: Omit<Report, 'id' | 'reportId' | 'status' |
     message: `${report.submittedByName} submitted: ${report.title}`,
     reportId: newReport.id,
   });
-  
+
   return newReport;
 };
 
@@ -254,12 +284,26 @@ export const updateReportStatus = (id: string, status: ReportStatus, feedback?: 
     updatedAt: new Date().toISOString(),
   };
 
-  // Add notification when report is closed
+  // Add notification when report is closed or status changes
   if (status === 'closed') {
     addNotification({
       type: 'report_closed',
       title: 'Report Closed',
       message: `Report ${reports[index].reportId} has been closed successfully`,
+      reportId: id,
+    });
+  } else if (status === 'approved') {
+    addNotification({
+      type: 'report_approved',
+      title: 'Report Approved',
+      message: `Report ${reports[index].reportId} has been approved`,
+      reportId: id,
+    });
+  } else if (status === 'rejected') {
+    addNotification({
+      type: 'report_rejected',
+      title: 'Report Rejected',
+      message: `Report ${reports[index].reportId} has been rejected`,
       reportId: id,
     });
   }
@@ -268,7 +312,7 @@ export const updateReportStatus = (id: string, status: ReportStatus, feedback?: 
 };
 
 export const assignCorrectiveAction = (
-  reportId: string, 
+  reportId: string,
   action: Omit<CorrectiveAction, 'id' | 'reportId' | 'status'>
 ): Report | undefined => {
   const index = reports.findIndex(r => r.id === reportId);
@@ -297,6 +341,26 @@ export const assignCorrectiveAction = (
     message: `Action assigned to ${action.assignedToName}: ${action.action.slice(0, 50)}...`,
     reportId,
   });
+
+  return reports[index];
+};
+
+export const updateCorrectiveActionStatus = (
+  reportId: string,
+  status: 'pending' | 'in_progress' | 'completed',
+  comments?: string
+): Report | undefined => {
+  const index = reports.findIndex(r => r.id === reportId);
+  if (index === -1 || !reports[index].correctiveAction) return undefined;
+
+  reports[index].correctiveAction = {
+    ...reports[index].correctiveAction!,
+    status,
+    comments: comments || reports[index].correctiveAction!.comments,
+    completedAt: status === 'completed' ? new Date().toISOString() : undefined,
+  };
+
+  reports[index].updatedAt = new Date().toISOString();
 
   return reports[index];
 };
@@ -345,7 +409,7 @@ export const deleteUser = (id: string): boolean => {
 
 // Notification functions
 export const getNotifications = (): Notification[] => {
-  return [...notifications].sort((a, b) => 
+  return [...notifications].sort((a, b) =>
     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 };
