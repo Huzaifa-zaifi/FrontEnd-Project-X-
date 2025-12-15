@@ -2,46 +2,184 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-body {
-  font-family: 'Open Sans', sans-serif;
-  background-color: #F3F4F6;
-  color: #111827;
-  line-height: 1.6;
-}
+@layer base {
+  :root {
+    /* Redvion Brand Colors */
+    --background: 220 14% 96%;
+    --foreground: 220 13% 13%;
 
-@keyframes slide-in {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 13%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 13%;
+
+    /* Redvion Red */
+    --primary: 0 84% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 13% 13%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 220 14% 96%;
+    --accent-foreground: 220 13% 13%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 0 84% 60%;
+
+    --radius: 0.75rem;
+
+    /* Sidebar Colors */
+    --sidebar-background: 220 26% 10%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 0 84% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 26% 14%;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 220 26% 16%;
+    --sidebar-ring: 0 84% 60%;
+    --sidebar-muted: 220 13% 65%;
+
+    /* Status Colors */
+    --status-pending: 45 93% 47%;
+    --status-approved: 142 71% 45%;
+    --status-rejected: 0 84% 60%;
+    --status-draft: 220 9% 46%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(0, 84%, 60%) 0%, hsl(0, 84%, 50%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(220, 14%, 98%) 100%);
+
+    /* Shadows */
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-card-hover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-modal: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   }
-  to {
-    transform: translateX(0);
-    opacity: 1;
+
+  .dark {
+    --background: 220 26% 10%;
+    --foreground: 220 14% 96%;
+
+    --card: 220 26% 12%;
+    --card-foreground: 220 14% 96%;
+
+    --popover: 220 26% 12%;
+    --popover-foreground: 220 14% 96%;
+
+    --primary: 0 84% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 26% 16%;
+    --secondary-foreground: 220 14% 96%;
+
+    --muted: 220 26% 16%;
+    --muted-foreground: 220 13% 65%;
+
+    --accent: 220 26% 16%;
+    --accent-foreground: 220 14% 96%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 220 14% 96%;
+
+    --border: 220 26% 18%;
+    --input: 220 26% 18%;
+    --ring: 0 84% 60%;
+
+    --sidebar-background: 220 26% 8%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 0 84% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 26% 12%;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 220 26% 14%;
+    --sidebar-ring: 0 84% 60%;
+    --sidebar-muted: 220 13% 65%;
   }
 }
 
-@keyframes slide-out {
-  from {
-    transform: translateX(0);
-    opacity: 1;
+@layer base {
+  * {
+    @apply border-border;
   }
-  to {
-    transform: translateX(100%);
-    opacity: 0;
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 }
 
-.animate-slide-in {
-  animation: slide-in 0.3s ease;
+@layer components {
+  .status-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .status-pending {
+    @apply bg-amber-100 text-amber-800;
+  }
+
+  .status-approved {
+    @apply bg-emerald-100 text-emerald-800;
+  }
+
+  .status-rejected {
+    @apply bg-red-100 text-red-800;
+  }
+
+  .status-draft {
+    @apply bg-gray-100 text-gray-600;
+  }
 }
 
-.animate-slide-out {
-  animation: slide-out 0.3s ease;
-}
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
 
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}

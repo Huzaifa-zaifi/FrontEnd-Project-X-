@@ -1,97 +1,73 @@
-# Redvion Dashboard - React Application
+# Welcome to your Lovable project
 
-A modern dashboard application built with React, Tailwind CSS, and Vite.
+## Project info
 
-## Features
+**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
 
-- 🔐 Authentication (Login/Signup)
-- 📊 Dashboard with analytics
-- 📄 Reports with image export
-- 📝 Form builder with export to Excel/Google Sheets
-- 👥 Team management
-- ✅ Checklist management
-- 🔔 Notification system for report submissions
-- 📱 Fully responsive design
+## How can I edit this code?
 
-## Installation
+There are several ways of editing your application.
 
-1. Install dependencies:
-```bash
-npm install
-```
+**Use Lovable**
 
-2. Start development server:
-```bash
+Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+
+Changes made via Lovable will be committed automatically to this repo.
+
+**Use your preferred IDE**
+
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+
+Follow these steps:
+
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
+
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
+
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 
-3. Build for production:
-```bash
-npm run build
-```
+**Edit a file directly in GitHub**
 
-## Project Structure
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-```
-src/
-├── components/
-│   ├── Layout/
-│   │   ├── Sidebar.jsx
-│   │   └── DashboardLayout.jsx
-│   ├── Charts/
-│   │   └── ActivityChart.jsx
-│   └── ProtectedRoute.jsx
-├── contexts/
-│   └── AuthContext.jsx
-├── pages/
-│   ├── auth/
-│   │   ├── Login.jsx
-│   │   └── Signup.jsx
-│   ├── Dashboard.jsx
-│   ├── Reports.jsx
-│   ├── Form.jsx
-│   ├── Team.jsx
-│   └── Checklist.jsx
-├── utils/
-│   ├── exportUtils.js
-│   └── notificationService.js
-├── App.jsx
-├── main.jsx
-└── index.css
-```
+**Use GitHub Codespaces**
 
-## Routes
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-- `/` - Redirects to dashboard
-- `/login` - Login page
-- `/signup` - Signup page
-- `/dashboard` - Main dashboard
-- `/reports` - Reports page with analytics
-- `/form` - Form builder with export options
-- `/team` - Team management
-- `/checklist` - Checklist management
+## What technologies are used for this project?
 
-## Technologies
+This project is built with:
 
-- React 18
-- React Router DOM
-- Tailwind CSS
 - Vite
-- XLSX (for Excel export)
-- html2canvas (for image export)
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-## Features Details
+## How can I deploy this project?
 
-### Export Functionality
-- Export forms to Excel (.xlsx)
-- Export forms to Google Sheets (CSV format)
-- Export reports as images (PNG)
+Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
 
-### Notifications
-- Automatic notifications sent to admin and general manager when reports are submitted
-- Notifications stored in localStorage (can be connected to API)
+## Can I connect a custom domain to my Lovable project?
 
-## License
+Yes, you can!
 
-MIT
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
