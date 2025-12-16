@@ -1,14 +1,7 @@
-import { ReportStatus } from '@/types/report';
 import { cn } from '@/lib/utils';
 import { Clock, CheckCircle, XCircle, FileEdit, AlertTriangle, Eye, ClipboardCheck } from 'lucide-react';
 
-interface StatusBadgeProps {
-  status: ReportStatus;
-  showIcon?: boolean;
-  size?: 'sm' | 'md';
-}
-
-const statusConfig: Record<ReportStatus, { label: string; className: string; icon: React.ElementType }> = {
+const statusConfig = {
   draft: {
     label: 'Draft',
     className: 'bg-gray-100 text-gray-600',
@@ -46,8 +39,8 @@ const statusConfig: Record<ReportStatus, { label: string; className: string; ico
   },
 };
 
-const StatusBadge = ({ status, showIcon = true, size = 'md' }: StatusBadgeProps) => {
-  const config = statusConfig[status];
+const StatusBadge = ({ status, showIcon = true, size = 'md' }) => {
+  const config = statusConfig[status] || statusConfig.draft;
   const Icon = config.icon;
 
   return (

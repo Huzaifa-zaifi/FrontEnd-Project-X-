@@ -1,14 +1,9 @@
-import { ReactNode } from 'react';
-import SupervisorSidebar from '@/components/layout/SupervisorSidebar';
+import Sidebar from './Sidebar';
 
-interface DashboardLayoutProps {
-  children: ReactNode;
-}
-
-const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+const DashboardLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-background">
-      <SupervisorSidebar />
+      <Sidebar />
       <main className="ml-56 min-h-screen p-8">
         <div className="max-w-6xl mx-auto animate-fade-in">
           {children}
