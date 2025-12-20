@@ -5,41 +5,69 @@ import {
   BarChart3,
   FileText,
   History,
-  Shield,
   Calendar,
   Download,
-  CheckCircle,
-  AlertTriangle,
   ChevronRight,
 } from "lucide-react";
 
 /* =======================
-   Weekly & Monthly Reports – With Exact Client Sidebar
+   Sidebar Item – Exact match to Client Graphs & Insights
+======================= */
+function SidebarItem({ icon, label, active = false }) {
+  return (
+    <div
+      className={`group flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all duration-200 hover:translate-x-1 ${
+        active
+          ? "bg-white text-black font-medium"
+          : "text-gray-400 hover:bg-gray-800 hover:text-white"
+      }`}
+    >
+      {React.cloneElement(icon, { size: 20 })}
+      {label}
+    </div>
+  );
+}
+
+/* =======================
+   Weekly & Monthly Reports – With Exact Client Graphs Sidebar + Animations
 ======================= */
 export default function WeeklyMonthlyReports() {
   const [activeTab, setActiveTab] = useState("monthly");
 
   return (
-    <div className="flex min-h-screen bg-white">
-      {/* SIDEBAR – Identical to Client Dashboard */}
-      <aside className="w-80 bg-gray-950 flex flex-col">
-        <div className="p-8 border-b border-gray-800">
-          <p className="text-sm text-gray-400 mt-1">Client Portal (View-Only)</p>
+    <div className="flex min-h-screen bg-gray-50">
+      {/* SIDEBAR – Exact match to Client Graphs & Insights */}
+      <aside className="w-64 bg-gradient-to-b from-[#0f141b] to-[#0b0f14] text-white flex flex-col justify-between">
+        <div>
+          <div className="p-6 animate-fade-in">
+            <h1 className="text-xl font-bold text-red-500">REDVION</h1>
+            <p className="text-sm text-gray-400">Client Portal (View-Only)</p>
+          </div>
+
+          <nav className="px-4 space-y-2">
+            <SidebarItem icon={<LayoutDashboard />} label="Dashboard" />
+            <SidebarItem icon={<Eye />} label="View All Observations" />
+            <SidebarItem icon={<BarChart3 />} label="Graphs & Site Insights" />
+            <SidebarItem icon={<FileText />} label="Weekly/Monthly Reports" active />
+            <SidebarItem icon={<History />} label="Activity History" />
+          </nav>
         </div>
 
-        <nav className="flex-1 px-6 py-8 space-y-2">
-          <SidebarItem icon={<LayoutDashboard />} label="Dashboard" />
-          <SidebarItem icon={<Eye />} label="View All Observations" />
-          <SidebarItem icon={<BarChart3 />} label="Graphs & Site Insights" />
-          <SidebarItem icon={<FileText />} label="Weekly/Monthly Reports" active />
-          <SidebarItem icon={<History />} label="Activity History" />
-        </nav>
+        <div className="p-4 border-t border-gray-800 animate-fade-in" style={{ animationDelay: "400ms" }}>
+          <div className="mb-3 flex items-center gap-3">
+            <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-lg">A</div>
+            <div>
+              <p className="text-sm font-medium">Acme Industries</p>
+              <p className="text-xs text-gray-400">Client Account • View-Only</p>
+            </div>
+          </div>
+        </div>
       </aside>
 
       {/* MAIN CONTENT */}
       <main className="flex-1 p-12 overflow-y-auto">
         {/* HEADER */}
-        <div className="mb-12">
+        <div className="mb-12 animate-fade-in">
           <h1 className="text-4xl font-bold text-gray-900 mb-4 flex items-center gap-4">
             <FileText className="text-red-600" size={48} />
             Weekly & Monthly Safety Reports
@@ -54,7 +82,7 @@ export default function WeeklyMonthlyReports() {
         </div>
 
         {/* TABS */}
-        <div className="flex gap-6 mb-12 border-b border-gray-200">
+        <div className="flex gap-6 mb-12 border-b border-gray-200 animate-slide-up">
           <button
             onClick={() => setActiveTab("monthly")}
             className={`pb-4 px-2 text-xl font-semibold border-b-4 transition-all duration-300 ${
@@ -90,10 +118,10 @@ export default function WeeklyMonthlyReports() {
                   "Resolution Rate: 82%",
                   "Safety Score: 94% ↑ 4% vs last month",
                 ]}
+                delay="100"
               />
-
-              <PreviousReportLink title="November 2025 Monthly Report" date="Nov 30, 2025" />
-              <PreviousReportLink title="October 2025 Monthly Report" date="Oct 31, 2025" />
+              <PreviousReportLink title="November 2025 Monthly Report" date="Nov 30, 2025" delay="200" />
+              <PreviousReportLink title="October 2025 Monthly Report" date="Oct 31, 2025" delay="300" />
             </>
           ) : (
             <>
@@ -106,64 +134,64 @@ export default function WeeklyMonthlyReports() {
                   "High-Risk Items Reduced by 30%",
                   "Resolution Rate This Week: 83%",
                 ]}
+                delay="100"
               />
-
-              <PreviousReportLink title="Week 50 (Dec 7 – Dec 13, 2025)" date="Dec 13, 2025" />
-              <PreviousReportLink title="Week 49 (Nov 30 – Dec 6, 2025)" date="Dec 6, 2025" />
+              <PreviousReportLink title="Week 50 (Dec 7 – Dec 13, 2025)" date="Dec 13, 2025" delay="200" />
+              <PreviousReportLink title="Week 49 (Nov 30 – Dec 6, 2025)" date="Dec 6, 2025" delay="300" />
             </>
           )}
         </div>
 
-        {/* EXPORT SECTION */}
+        {/* EXPORT SECTION – Now matching your screenshot exactly */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
           <ExportButton
             label="Download PDF Report"
             desc="Professional executive summary with graphs and insights"
             color="red"
+            delay="400"
           />
           <ExportButton
             label="Export to Excel"
             desc="Complete dataset with all observations and breakdowns"
             color="green"
+            delay="500"
           />
         </div>
 
         {/* VIEW-ONLY NOTE */}
-        <p className="text-center text-gray-500 mt-12 text-lg">
+        <p className="text-center text-gray-500 mt-12 text-lg animate-fade-in" style={{ animationDelay: "600ms" }}>
           All reports are generated and verified by your dedicated REDVION safety team.  
           This is a <strong>view-only portal</strong> for maximum transparency.
         </p>
       </main>
+
+      {/* Same Animations as Client Graphs Dashboard */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.8s ease-out forwards;
+        }
+        .animate-slide-up {
+          animation: slideUp 0.7s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }
 
 /* =======================
-   Sidebar Item – White active background (exact match)
+   Monthly Report Card – With Animation
 ======================= */
-function SidebarItem({ icon, label, active = false }) {
+function MonthlyReportCard({ period, badge, stats, delay }) {
   return (
-    <div
-      className={`group flex items-center gap-5 px-6 py-5 rounded-2xl cursor-pointer transition-all duration-300 ${
-        active
-          ? "bg-white text-gray-900 font-bold shadow-xl"
-          : "text-gray-400 hover:bg-gray-800 hover:text-white"
-      }`}
-    >
-      <div className="p-3 rounded-xl bg-gray-800 group-hover:bg-white/10 transition-colors">
-        {React.cloneElement(icon, { size: 28 })}
-      </div>
-      <span className="text-xl font-medium">{label}</span>
-    </div>
-  );
-}
-
-/* =======================
-   Monthly Report Card
-======================= */
-function MonthlyReportCard({ period, badge, stats }) {
-  return (
-    <div className="bg-white rounded-3xl shadow-lg border-l-8 border-red-600 p-10">
+    <div className="bg-white rounded-3xl shadow-lg border-l-8 border-red-600 p-10 animate-slide-up" style={{ animationDelay: `${delay}ms` }}>
       <div className="flex justify-between items-start mb-8">
         <div>
           <h3 className="text-3xl font-bold text-gray-900">Monthly Safety Report</h3>
@@ -173,26 +201,22 @@ function MonthlyReportCard({ period, badge, stats }) {
           {badge}
         </span>
       </div>
-
       <div className="space-y-4 text-gray-700">
         {stats.map((stat, i) => (
-          <p key={i} className="text-xl leading-relaxed">
-            {stat}
-          </p>
+          <p key={i} className="text-xl leading-relaxed">{stat}</p>
         ))}
       </div>
-
       <p className="text-gray-500 mt-10">Generated on December 20, 2025</p>
     </div>
   );
 }
 
 /* =======================
-   Weekly Report Card
+   Weekly Report Card – With Animation
 ======================= */
-function WeeklyReportCard({ period, badge, stats }) {
+function WeeklyReportCard({ period, badge, stats, delay }) {
   return (
-    <div className="bg-white rounded-3xl shadow-lg border-l-8 border-orange-500 p-10">
+    <div className="bg-white rounded-3xl shadow-lg border-l-8 border-orange-500 p-10 animate-slide-up" style={{ animationDelay: `${delay}ms` }}>
       <div className="flex justify-between items-start mb-8">
         <div>
           <h3 className="text-3xl font-bold text-gray-900">Weekly Safety Summary</h3>
@@ -202,26 +226,22 @@ function WeeklyReportCard({ period, badge, stats }) {
           {badge}
         </span>
       </div>
-
       <div className="space-y-4 text-gray-700">
         {stats.map((stat, i) => (
-          <p key={i} className="text-xl leading-relaxed">
-            {stat}
-          </p>
+          <p key={i} className="text-xl leading-relaxed">{stat}</p>
         ))}
       </div>
-
       <p className="text-gray-500 mt-10">Generated on December 20, 2025</p>
     </div>
   );
 }
 
 /* =======================
-   Previous Report Link
+   Previous Report Link – With Animation
 ======================= */
-function PreviousReportLink({ title, date }) {
+function PreviousReportLink({ title, date, delay }) {
   return (
-    <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer group">
+    <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200 hover:shadow-md transition-shadow cursor-pointer group animate-slide-up" style={{ animationDelay: `${delay}ms` }}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <FileText className="text-gray-600" size={32} />
@@ -237,24 +257,23 @@ function PreviousReportLink({ title, date }) {
 }
 
 /* =======================
-   Export Button
+   Export Button – Now exactly matching your screenshot
 ======================= */
-function ExportButton({ label, desc, color }) {
+function ExportButton({ label, desc, color, delay }) {
   const colors = {
-    red: "from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
-    green: "from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700",
+    red: "bg-red-500 hover:bg-red-600",
+    green: "bg-green-500 hover:bg-green-600",
   };
 
   return (
     <button
-      className={`rounded-3xl p-10 bg-gradient-to-r ${colors[color]} text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-3xl`}
+      className={`rounded-xl p-6 ${colors[color]} text-white shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-slide-up`}
+      style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex flex-col items-center text-center">
-        <div className="flex items-center gap-5 mb-4">
-          <Download size={48} />
-          <span className="text-2xl font-bold">{label}</span>
-        </div>
-        <p className="text-white/90 text-lg max-w-sm">{desc}</p>
+        <Download size={32} className="mb-3" />
+        <span className="text-xl font-bold mb-2">{label}</span>
+        <p className="text-base opacity-90">{desc}</p>
       </div>
     </button>
   );

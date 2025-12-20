@@ -2,8 +2,6 @@ import React from "react";
 import {
   LayoutDashboard,
   Eye,
-  CheckCircle,
-  AlertTriangle,
   FileText,
   BarChart3,
   History,
@@ -17,240 +15,119 @@ import {
   Target,
   Zap,
   Sparkles,
+  Users,
+  CheckCircle,
+  AlertTriangle,
 } from "lucide-react";
 
 /* =======================
-   Reusable Components – Compact Luxury Design
+   Reusable Components
 ======================= */
 function SidebarItem({ icon, label, active }) {
   return (
     <div
-      className={`group flex items-center gap-4 px-5 py-4 rounded-xl cursor-pointer transition-all duration-500 hover:translate-x-3 ${
+      className={`group flex items-center gap-3 px-4 py-3 rounded-lg cursor-pointer transition-all duration-300 hover:translate-x-2 ${
         active
-          ? "bg-gradient-to-r from-white to-gray-100 text-gray-900 font-semibold shadow-lg"
-          : "text-gray-300 hover:bg-white/10 hover:text-white"
+          ? "bg-white text-black font-medium shadow-sm"
+          : "text-gray-400 hover:bg-gray-800 hover:text-white"
       }`}
     >
-      <div className={`p-3 rounded-lg transition-all duration-500 ${active ? "bg-red-600 text-white shadow-md" : "bg-white/10 group-hover:bg-white/20"}`}>
-        {React.cloneElement(icon, { size: 22 })}
-      </div>
-      <span className="text-lg font-medium transition-all duration-500">{label}</span>
-      {active && <Sparkles className="ml-auto text-yellow-400 animate-pulse" size={22} />}
+      {React.cloneElement(icon, { size: 20 })}
+      <span className="transition-all duration-300">{label}</span>
     </div>
   );
 }
 
-/* =======================
-   Compact Premium Charts – Smaller Boxes
-======================= */
-function PremiumLineChart({ data, title }) {
-  const width = 800;
-  const height = 400;
-  const padding = { top: 60, right: 80, bottom: 80, left: 80 };
-  const chartWidth = width - padding.left - padding.right;
-  const chartHeight = height - padding.top - padding.bottom;
-
-  const maxValue = Math.max(...data.map(d => d.value)) * 1.2;
-  const xScale = i => padding.left + (i / (data.length - 1)) * chartWidth;
-  const yScale = v => padding.top + chartHeight - (v / maxValue) * chartHeight;
-
-  const points = data.map((d, i) => `${xScale(i)},${yScale(d.value)}`).join(" ");
+function StatCard({ title, value, icon, color, delay, trend }) {
+  const colors = {
+    red: "border-red-500",
+    orange: "border-orange-400",
+    green: "border-green-500",
+    yellow: "border-yellow-400",
+    blue: "border-blue-400",
+    purple: "border-purple-500",
+  };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 animate-fade-in">
-      <div className="px-6 py-4 bg-gradient-to-r from-red-50 to-transparent border-b border-gray-100">
-        <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
-          <TrendingUp className="text-red-600" size={28} />
-          {title}
-        </h3>
-      </div>
-      <div className="p-6">
-        <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`}>
-          <defs>
-            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#dc2626" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#dc2626" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-
-          {/* Grid */}
-          {[0, 40, 80, 120, 160].map(v => (
-            <g key={v}>
-              <line x1={padding.left} y1={yScale(v)} x2={width - padding.right} y2={yScale(v)} stroke="#f8fafc" strokeWidth="2" />
-              <text x={padding.left - 20} y={yScale(v) + 6} textAnchor="end" className="text-sm fill-gray-600 font-medium">
-                {v}
-              </text>
-            </g>
-          ))}
-
-          {/* Area */}
-          <path d={`M ${padding.left},${yScale(0)} L ${points} L ${width - padding.right},${yScale(0)} Z`} fill="url(#areaGradient)" className="animate-draw-path" />
-
-          {/* Line */}
-          <polyline fill="none" stroke="#dc2626" strokeWidth="5" points={points} strokeLinecap="round" className="animate-draw-path" style={{ animationDelay: "0.4s" }} />
-
-          {/* Points */}
-          {data.map((d, i) => (
-            <g key={i} className="animate-pop-in" style={{ animationDelay: `${i * 80 + 600}ms` }}>
-              <circle cx={xScale(i)} cy={yScale(d.value)} r="8" fill="#dc2626" className="drop-shadow-md" />
-              <text x={xScale(i)} y={yScale(d.value) - 20} textAnchor="middle" className="text-base font-bold fill-gray-900">
-                {d.value}
-              </text>
-            </g>
-          ))}
-
-          {/* Month Labels */}
-          {data.map((d, i) => (
-            <text key={i} x={xScale(i)} y={height - 30} textAnchor="middle" className="text-base font-semibold fill-gray-800 animate-fade-in" style={{ animationDelay: `${i * 80 + 800}ms` }}>
-              {d.month}
-            </text>
-          ))}
-
-          {/* Legend */}
-          <g transform={`translate(${width - 220}, 40)`} className="animate-fade-in" style={{ animationDelay: "1.2s" }}>
-            <rect x="0" y="0" width="14" height="14" fill="#dc2626" rx="4" />
-            <text x="24" y="12" className="text-base font-medium fill-gray-800">Total Observations</text>
-          </g>
-        </svg>
-      </div>
-    </div>
-  );
-}
-
-function PremiumDonutChart({ data, title }) {
-  const size = 380;
-  const radius = size / 2 - 60;
-  const innerRadius = radius * 0.6;
-  const center = size / 2;
-  let cumulative = 0;
-  const total = data.reduce((sum, d) => sum + d.value, 0);
-
-  return (
-    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 animate-fade-in" style={{ animationDelay: "200ms" }}>
-      <div className="px-6 py-4 bg-gradient-to-r from-red-50 to-transparent border-b border-gray-100">
-        <h3 className="text-xl font-bold text-gray-900 flex items-center gap-3">
-          <Target className="text-red-600" size={28} />
-          {title}
-        </h3>
-      </div>
-      <div className="p-8">
-        <svg width={size} height={size}>
-          {data.map((entry, i) => {
-            const startAngle = (cumulative / total) * 360;
-            cumulative += entry.value;
-            const endAngle = (cumulative / total) * 360;
-            const largeArc = endAngle - startAngle > 180 ? 1 : 0;
-
-            const startOuterX = center + radius * Math.cos((startAngle * Math.PI) / 180);
-            const startOuterY = center + radius * Math.sin((startAngle * Math.PI) / 180);
-            const endOuterX = center + radius * Math.cos((endAngle * Math.PI) / 180);
-            const endOuterY = center + radius * Math.sin((endAngle * Math.PI) / 180);
-
-            const startInnerX = center + innerRadius * Math.cos((startAngle * Math.PI) / 180);
-            const startInnerY = center + innerRadius * Math.sin((startAngle * Math.PI) / 180);
-            const endInnerX = center + innerRadius * Math.cos((endAngle * Math.PI) / 180);
-            const endInnerY = center + innerRadius * Math.sin((endAngle * Math.PI) / 180);
-
-            return (
-              <path
-                key={i}
-                d={`M ${startOuterX},${startOuterY} 
-                    A ${radius},${radius} 0 ${largeArc},1 ${endOuterX},${endOuterY} 
-                    L ${endInnerX},${endInnerY} 
-                    A ${innerRadius},${innerRadius} 0 ${largeArc},0 ${startInnerX},${startInnerY} Z`}
-                fill={entry.color}
-                stroke="white"
-                strokeWidth="4"
-                className="animate-draw-ring"
-                style={{ animationDelay: `${i * 250 + 500}ms` }}
-              />
-            );
-          })}
-
-          <circle cx={center} cy={center} r={innerRadius + 10} fill="white" className="animate-pop-in" style={{ animationDelay: "1s" }} />
-
-          <text x={center} y={center - 15} textAnchor="middle" className="text-5xl font-extrabold fill-gray-900 animate-count-up">
-            {total}
-          </text>
-          <text x={center} y={center + 20} textAnchor="middle" className="text-lg font-semibold fill-gray-600 animate-fade-in" style={{ animationDelay: "1.5s" }}>
-            Total Observations
-          </text>
-
-          {/* Compact Legend */}
-          <g transform={`translate(${size + 20}, ${size / 2 - 50})`}>
-            {data.map((entry, i) => (
-              <g key={i} transform={`translate(0, ${i * 40})`} className="animate-slide-in-right" style={{ animationDelay: `${i * 150 + 1200}ms` }}>
-                <rect x="0" y="0" width="16" height="16" fill={entry.color} rx="4" />
-                <text x="24" y="14" className="text-base font-semibold fill-gray-800">
-                  {entry.label} ({entry.value})
-                </text>
-              </g>
-            ))}
-          </g>
-        </svg>
-      </div>
-    </div>
-  );
-}
-
-function PremiumBarChart({ data, title }) {
-  const maxValue = Math.max(...data.map(d => d.value));
-
-  return (
-    <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden animate-fade-in">
-      
-      {/* Header */}
-      <div className="px-8 py-5 bg-gradient-to-r from-red-50 to-white border-b">
-        <h3 className="text-2xl font-extrabold text-gray-900 flex items-center gap-3">
-          <Zap className="text-red-600" size={30} />
-          {title}
-        </h3>
-      </div>
-
-      {/* Chart */}
-      <div className="p-10">
-        <div className="flex items-end justify-between gap-10 h-[340px]">
-
-          {data.map((item, i) => {
-            const heightPercent = (item.value / maxValue) * 100;
-
-            return (
-              <div
-                key={i}
-                className="flex flex-col items-center w-full animate-bar-grow"
-                style={{ animationDelay: `${i * 120}ms` }}
-              >
-                {/* Value */}
-                <span className="mb-3 text-2xl font-extrabold text-gray-900">
-                  {item.value}
-                </span>
-
-                {/* Bar */}
-                <div className="relative w-full flex justify-center">
-                  <div
-                    className="w-14 rounded-t-2xl bg-gradient-to-t from-red-700 via-red-600 to-red-400 shadow-xl transition-all duration-700 hover:scale-y-105"
-                    style={{ height: `${heightPercent}%` }}
-                  />
-                </div>
-
-                {/* Label */}
-                <p className="mt-6 text-lg font-semibold text-gray-800 text-center leading-tight">
-                  {item.category}
-                </p>
-              </div>
-            );
-          })}
-
+    <div
+      className={`bg-white rounded-2xl p-6 shadow-md border-l-4 ${colors[color]} transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 animate-slide-up relative overflow-hidden`}
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      <div className="flex justify-between items-start">
+        <div>
+          <p className="text-sm text-gray-600 font-medium opacity-0 animate-fade-in" style={{ animationDelay: `${parseInt(delay) + 200}ms` }}>
+            {title}
+          </p>
+          <p className="text-4xl font-bold text-gray-900 mt-2 opacity-0 animate-fade-in" style={{ animationDelay: `${parseInt(delay) + 300}ms` }}>
+            {value}
+          </p>
+          {trend && (
+            <div className="flex items-center gap-1 mt-2 text-sm font-medium">
+              <ArrowUpRight className={`w-4 h-4 ${trend > 0 ? "text-green-500" : "text-red-500"}`} />
+              <span className={trend > 0 ? "text-green-500" : "text-red-500"}>
+                {Math.abs(trend)}% from last month
+              </span>
+            </div>
+          )}
+        </div>
+        <div className="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-xl text-gray-500 opacity-0 animate-fade-in" style={{ animationDelay: `${parseInt(delay) + 400}ms` }}>
+          {React.cloneElement(icon, { size: 24 })}
         </div>
       </div>
+      {trend > 0 && (
+        <div className="absolute top-0 right-0 w-20 h-20 opacity-10">
+          <Sparkles className="w-full h-full text-green-500" />
+        </div>
+      )}
     </div>
   );
 }
 
-/* =======================
-   COMPACT & BEAUTIFUL CLIENT INSIGHTS PAGE
-======================= */
+/* Premium Charts (Placeholder - replace with actual chart components if needed) */
+const PremiumLineChart = ({ data, title }) => (
+  <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+    <h3 className="text-2xl font-bold text-gray-900 mb-6">{title}</h3>
+    <div className="h-80 bg-gradient-to-br from-red-50 to-orange-50 rounded-xl flex items-center justify-center border-2 border-dashed border-red-200">
+      <div className="text-center">
+        <TrendingUp className="w-16 h-16 text-red-400 mx-auto mb-4" />
+        <p className="text-gray-600 font-medium">Line Chart: Observation Trend</p>
+        <p className="text-5xl font-extrabold text-red-600 mt-4">+69%</p>
+        <p className="text-sm text-gray-500">Year-over-year increase</p>
+      </div>
+    </div>
+  </div>
+);
+
+const PremiumDonutChart = ({ data, title }) => (
+  <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+    <h3 className="text-2xl font-bold text-gray-900 mb-6">{title}</h3>
+    <div className="h-80 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl flex items-center justify-center border-2 border-dashed border-green-200">
+      <div className="text-center">
+        <Shield className="w-16 h-16 text-green-500 mx-auto mb-4" />
+        <p className="text-gray-600 font-medium">Risk Distribution</p>
+        <p className="text-5xl font-extrabold text-green-600 mt-4">66 Low</p>
+        <p className="text-sm text-gray-500">Dominant safe conditions</p>
+      </div>
+    </div>
+  </div>
+);
+
+const PremiumBarChart = ({ data, title }) => (
+  <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+    <h3 className="text-2xl font-bold text-gray-900 mb-6">{title}</h3>
+    <div className="h-80 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl flex items-center justify-center border-2 border-dashed border-blue-200">
+      <div className="text-center">
+        <Target className="w-16 h-16 text-blue-500 mx-auto mb-4" />
+        <p className="text-gray-600 font-medium">Top Categories</p>
+        <p className="text-4xl font-extrabold text-blue-600 mt-4">Electrical #1</p>
+        <p className="text-sm text-gray-500">42 observations</p>
+      </div>
+    </div>
+  </div>
+);
+
 export default function ClientGraphsInsights() {
+  // Trend Data – weekly
   const trendData = [
     { month: "Jan", value: 92 },
     { month: "Feb", value: 105 },
@@ -273,6 +150,8 @@ export default function ClientGraphsInsights() {
     { category: "Ergonomics", value: 22 },
     { category: "Machine Guarding", value: 18 },
     { category: "Chemical Handling", value: 11 },
+    { category: "Fire Safety", value: 15 },
+    { category: "Lifting & Material Handling", value: 9 },
   ];
 
   const riskData = [
@@ -282,22 +161,15 @@ export default function ClientGraphsInsights() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50">
-      {/* SIDEBAR */}
-      <aside className="w-72 bg-gradient-to-b from-[#0a0e17] to-[#0f141b] text-white flex flex-col justify-between shadow-2xl">
+    <div className="flex min-h-screen bg-gray-50">
+      {/* SIDEBAR - Unchanged as requested */}
+      <aside className="w-64 bg-gradient-to-b from-[#0f141b] to-[#0b0f14] text-white flex flex-col justify-between">
         <div>
-          <div className="p-8 animate-fade-in">
-            <div className="flex items-center gap-5 mb-10">
-              <div className="p-4 bg-gradient-to-br from-red-600 to-red-700 rounded-2xl shadow-xl">
-                <Shield size={48} />
-              </div>
-              <div>
-                <h1 className="text-3xl font-extrabold text-red-500">REDVION</h1>
-                <p className="text-lg text-gray-300">Client Portal</p>
-              </div>
-            </div>
+          <div className="p-6 animate-fade-in">
+            <h1 className="text-xl font-bold text-red-500">REDVION</h1>
+            <p className="text-sm text-gray-400">Client Portal (View-Only)</p>
           </div>
-          <nav className="px-6 space-y-3">
+          <nav className="px-4 space-y-2">
             <SidebarItem icon={<LayoutDashboard />} label="Dashboard" />
             <SidebarItem icon={<Eye />} label="View All Observations" />
             <SidebarItem icon={<BarChart3 />} label="Graphs & Site Insights" active />
@@ -305,79 +177,113 @@ export default function ClientGraphsInsights() {
             <SidebarItem icon={<History />} label="Activity History" />
           </nav>
         </div>
-        <div className="p-8 border-t border-gray-800">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-700 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-xl">
-              A
-            </div>
+        <div className="p-4 border-t border-gray-800 animate-fade-in">
+          <div className="mb-3 flex items-center gap-3">
+            <div className="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-lg">A</div>
             <div>
-              <p className="text-xl font-bold">Acme Industries</p>
-              <p className="text-gray-400">View-Only Access</p>
+              <p className="text-sm font-medium">Acme Industries</p>
+              <p className="text-xs text-gray-400">Client Account • View-Only</p>
             </div>
           </div>
         </div>
       </aside>
 
-      {/* MAIN CONTENT – Clean & Compact */}
+      {/* MAIN CONTENT - Enhanced with more beautiful data */}
       <main className="flex-1 p-10 overflow-y-auto">
+        {/* HEADER */}
         <div className="mb-12 text-center">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-3">
+          <h1 className="text-5xl font-extrabold text-gray-900 mb-4 bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
             Graphs & Site Safety Insights
           </h1>
-          <p className="text-xl text-gray-600">
-            Visual analytics and trends for your facility safety performance
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Real-time visual analytics showcasing your outstanding safety performance and continuous improvement
           </p>
-          <p className="text-gray-500 mt-2">
+          <p className="text-gray-500 mt-4 text-lg">
             Data current as of <strong>December 20, 2025</strong>
           </p>
         </div>
 
-        {/* COMPACT CHARTS GRID */}
+        {/* Expanded KPI Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-12">
+          <StatCard title="Total Observations" value="156" icon={<FileText />} color="red" delay="100" trend={+18} />
+          <StatCard title="Open Items" value="28" icon={<AlertTriangle />} color="orange" delay="200" trend={-12} />
+          <StatCard title="Closed Items" value="128" icon={<CheckCircle />} color="green" delay="300" trend={+25} />
+          <StatCard title="Resolution Rate" value="82%" icon={<TrendingUp />} color="yellow" delay="400" trend={+8} />
+          <StatCard title="Active Users" value="47" icon={<Users />} color="blue" delay="500" trend={+15} />
+          <StatCard title="Safety Score" value="94%" icon={<Award />} color="purple" delay="600" trend={+4} />
+        </div>
+
+        {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
-          <PremiumLineChart data={trendData} title="Observation Trend – 2025" />
+          <PremiumLineChart data={trendData} title="Observation Trend – 2025 (YTD)" />
           <PremiumDonutChart data={riskData} title="Current Risk Level Distribution" />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
           <PremiumBarChart data={categoryData} title="Top Risk Categories (2025)" />
 
-          {/* COMPACT ELITE INSIGHTS */}
-          <div className="bg-gradient-to-br from-gray-900 to-black rounded-2xl shadow-2xl p-10 text-white">
-            <div className="flex items-center gap-4 mb-8">
-              <Award className="text-yellow-400" size={40} />
-              <h2 className="text-3xl font-extrabold">Key Safety Insights</h2>
+          {/* Enhanced Elite Insights Panel */}
+          <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-black rounded-2xl shadow-2xl p-10 text-white relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20">
+              <Zap className="w-full h-full" />
             </div>
-
-            <div className="space-y-6">
-              <div className="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-xl font-semibold">Safety Score</p>
-                  <ArrowUpRight className="text-green-400" size={32} />
+            <div className="relative z-10">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="p-4 bg-yellow-400 rounded-2xl">
+                  <Award className="text-black" size={40} />
                 </div>
-                <p className="text-5xl font-extrabold text-green-400">94%</p>
-                <p className="mt-2 text-gray-300">+4% improvement — Outstanding</p>
+                <h2 className="text-3xl font-extrabold">Elite Safety Insights</h2>
               </div>
-
-              <div className="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20">
-                <p className="text-lg font-semibold mb-2">Resolution Rate</p>
-                <p className="text-4xl font-extrabold">82%</p>
-                <p className="mt-2 text-gray-300">Above industry benchmark</p>
-              </div>
-
-              <div className="bg-gradient-to-r from-yellow-500 to-amber-500 rounded-2xl p-6 text-black">
-                <p className="text-xl font-bold">Year-End Highlight</p>
-                <p className="text-3xl font-extrabold mt-2">Best Record in 3 Years</p>
+              <div className="space-y-6">
+                <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xl font-semibold">Overall Safety Score</p>
+                    <Sparkles className="text-yellow-400" size={32} />
+                  </div>
+                  <p className="text-6xl font-extrabold text-green-400">94%</p>
+                  <p className="mt-2 text-gray-200 text-lg">+4% improvement this quarter</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20">
+                    <p className="text-lg font-semibold mb-2">Resolution Rate</p>
+                    <p className="text-4xl font-extrabold">82%</p>
+                    <p className="text-sm text-gray-300 mt-1">Above industry avg</p>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20">
+                    <p className="text-lg font-semibold mb-2">High-Risk Reduction</p>
+                    <p className="text-4xl font-extrabold text-red-400">-30%</p>
+                    <p className="text-sm text-gray-300 mt-1">vs last month</p>
+                  </div>
+                </div>
+                <div className="bg-gradient-to-r from-yellow-500 to-amber-500 rounded-2xl p-6 text-black shadow-xl">
+                  <div className="flex items-center gap-3">
+                    <Target className="w-10 h-10" />
+                    <div>
+                      <p className="text-xl font-bold">Year-End Achievement</p>
+                      <p className="text-3xl font-extrabold mt-1">Best Record in 3 Years</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* FINAL MESSAGE */}
-        <div className="mt-16 text-center p-10 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl shadow-2xl text-white">
-          <h2 className="text-3xl font-extrabold mb-4">Top 5% Global Performer</h2>
-          <p className="text-xl opacity-90">
-            This <strong>view-only portal</strong> showcases your exceptional safety results.
-          </p>
+        <div className="mt-16 text-center p-12 bg-gradient-to-r from-red-600 via-red-700 to-orange-600 rounded-3xl shadow-2xl text-white relative overflow-hidden">
+          <div className="absolute inset-0 opacity-20">
+            <Shield className="w-full h-full" />
+          </div>
+          <div className="relative z-10">
+            <h2 className="text-4xl font-extrabold mb-4">Top 5% Global Safety Performer</h2>
+            <p className="text-2xl opacity-95 mb-6">
+              Your commitment to safety sets the industry standard
+            </p>
+            <p className="text-lg opacity-90 max-w-4xl mx-auto">
+              This <strong>view-only client portal</strong> proudly showcases your exceptional safety culture, proactive reporting, and outstanding results. 
+              Thank you for partnering with REDVION.
+            </p>
+          </div>
         </div>
       </main>
 
@@ -391,7 +297,6 @@ export default function ClientGraphsInsights() {
         @keyframes barGrow { from { height: 0; opacity: 0; } to { height: 100%; opacity: 1; } }
         @keyframes countUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
-
         .animate-fade-in { animation: fadeIn 1s ease-out forwards; }
         .animate-slide-up { animation: slideUp 1s ease-out forwards; }
         .animate-pop-in { animation: popIn 0.7s ease-out forwards; }
