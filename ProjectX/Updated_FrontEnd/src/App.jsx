@@ -21,6 +21,12 @@ import RolesPermissionsDashboard from './Components/Admin/RolesPermissionsD';
 import CategoriesRisksDashboard from './Components/Admin/CategoriesRisksD';
 import ReportsAnalyticsDashboard from './Components/Admin/ReportsAnalyticsD';
 import ActionHistoryPage from './Components/Admin/HistoryA';
+// Client Components
+import ClientDashboard from './Components/clients/ClientD';
+import ClientAllObservations from './Components/clients/ClientAllOb';
+import ClientGraphsInsights from './Components/clients/ClientGraphs';
+import ClientReports from './Components/clients/ClientR';
+import ActivityHistory from './Components/clients/ActivityH';
 
 function App() {
   return (
@@ -51,6 +57,13 @@ function App() {
         <Route path="/admin/category-management" element={<CategoriesRisksDashboard />} />       
         <Route path="/admin/report-analytics"   element={<ReportsAnalyticsDashboard />} />
         <Route path="/admin/action-history" element={<ActionHistoryPage />} />
+
+        {/* clients dashbord */}
+        <Route path="/client-dashboard" element={<ClientDashboard />} />
+        <Route path="/clients/ClientsAllobs" element={<ClientAllObservations />} />
+        <Route path="/clients/Clientgraphs" element={<ClientGraphsInsights />} />
+        <Route path="/clients/ClientReports" element={<ClientReports />} />
+        <Route path="/clients/ActivityHistory" element={<ActivityHistory />} />
       </Routes>
     </Router>
   );
